@@ -1,0 +1,133 @@
+/* Estils bàsics per al menú */
+.menu-navegacio ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+.menu-navegacio a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+}
+.menu-navegacio a:hover {
+    color: #F53003; /* Color vermell de Laravel */
+}
+
+/* Contenidor principal */
+.vista-contingut {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.capcalera-vista {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.capcalera-vista h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Taules */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+}
+table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+table tr:nth-child(even) {
+    background-color: #fdfdfc;
+}
+table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Formularis */
+.formulari .form-group {
+    margin-bottom: 1.5rem;
+}
+.formulari label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.formulari input[type="text"],
+.formulari input[type="number"],
+.formulari input[type="date"],
+.formulari select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    box-sizing: border-box; /* Assegura que el padding no afecti l'amplada */
+}
+
+/* Botons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.btn-primary {
+    background-color: #1b1b18; /* Negre */
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #333;
+}
+.btn-secondary {
+    background-color: #eee;
+    color: #333;
+}
+.btn-secondary:hover {
+    background-color: #ddd;
+}
+
+/* Alertes */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+.alert-danger ul {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+}
+
+/* Component Equip-mini */
+.equip-mini {
+    font-weight: 500;
+}
