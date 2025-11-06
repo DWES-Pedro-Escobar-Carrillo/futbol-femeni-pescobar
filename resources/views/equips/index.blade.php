@@ -9,7 +9,7 @@
 @endif
 
 <p class="mb-4">
-  <a href="{{ route('equips.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Nou equip</a>
+  <a href="{{ route('equips.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">+ Nou equip</a>
 </p>
 
 <table class="w-full border-collapse border border-gray-300">
