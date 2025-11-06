@@ -1,36 +1,36 @@
 @extends('layouts.app')
+@section('title', 'Crear Nou Estadi')
 
 @section('content')
-<div class="vista-contingut">
-    <h2>Crear Nou Estadi</h2>
+<h1 class="text-2xl font-bold mb-4">Crear Nou Estadi</h1>
 
-    <form action="{{ route('estadis.store') }}" method="POST" class="formulari">
-        @csrf
+@include('partials.messages')
 
-        <div class="form-group">
-            <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" value="{{ old('nom') }}">
-        </div>
+<form action="{{ route('estadis.store') }}" method="POST" class="space-y-4">
+    @csrf
+    <div>
+        <label for="nom" class="block font-bold">Nom:</label>
+        <input type="text" id="nom" name="nom" value="{{ old('nom') }}" class="border p-2 w-full">
+    </div>
 
-        <div class="form-group">
-            <label for="ciutat">Ciutat</label>
-            <input type="text" id="ciutat" name="ciutat" value="{{ old('ciutat') }}">
-        </div>
+    <div>
+        <label for="ciutat" class="block font-bold">Ciutat:</label>
+        <input type="text" id="ciutat" name="ciutat" value="{{ old('ciutat') }}" class="border p-2 w-full">
+    </div>
 
-        <div class="form-group">
-            <label for="capacitat">Capacitat</label>
-            <input type="number" id="capacitat" name="capacitat" value="{{ old('capacitat') }}" min="0">
-        </div>
+    <div>
+        <label for="capacitat" class="block font-bold">Capacitat:</label>
+        <input type="number" id="capacitat" name="capacitat" value="{{ old('capacitat') }}" min="0" class="border p-2 w-full">
+    </div>
 
-        <div class="form-group">
-            <label for="equip_principal">Equip Principal</label>
-            <input type="text" id="equip_principal" name="equip_principal" value="{{ old('equip_principal') }}">
-        </div>
+    <div>
+        <label for="equip_principal" class="block font-bold">Equip Principal:</label>
+        <input type="text" id="equip_principal" name="equip_principal" value="{{ old('equip_principal') }}" class="border p-2 w-full">
+    </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{{ route('estadis.index') }}" class="btn btn-secondary">Cancel·lar</a>
-        </div>
-    </form>
-</div>
+    <div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+        <a href="{{ route('estadis.index') }}" class="bg-gray-300 text-black px-4 py-2 rounded">Cancel·lar</a>
+    </div>
+</form>
 @endsection

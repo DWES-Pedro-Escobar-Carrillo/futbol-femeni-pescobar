@@ -1,35 +1,33 @@
 @extends('layouts.app')
+@section('title', "Llistat de Partits")
 
 @section('content')
-<div class="vista-contingut">
-    <div class="capcalera-vista">
-        <h2>Llistat de Partits</h2>
-        <a href="{{ route('partits.create') }}" class="btn btn-primary">+ Nou Partit</a>
-    </div>
+<h1 class="text-3xl font-bold text-blue-800 mb-6">Llistat de Partits</h1>
 
-    <table>
-        <thead>
+@include('partials.messages')
+
+<p class="mb-4">
+    <a href="{{ route('partits.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">+ Nou Partit</a>
+</p>
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="border border-gray-300 p-2">Local</th>
+            <th class="border border-gray-300 p-2">Visitant</th>
+            <th class="border border-gray-300 p-2">Data</th>
+            <th class="border border-gray-300 p-2">Resultat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($partits as $key => $partit)
+            {{-- Utilitzem el component Blade per a la fila --}}
+            <x-partit :partit="$partit" :key="$key" />
+        @empty
             <tr>
-                <th>Local</th>
-                <th>Visitant</th>
-                <th>Data</th>
-                <th>Resultat</th>
+                <td colspan="4" class="border border-gray-300 p-2">No hi ha partits per mostrar.</td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse ($partits as $partit)
-                <tr>
-                    <td><x-equip-mini :nom="$partit['local']" /></td>
-                    <td><x-equip-mini :nom="$partit['visitant']" /></td>
-                    <td>{{ \Carbon\Carbon::parse($partit['data'])->format('d/m/Y') }}</td>
-                    <td>{{ $partit['resultat'] ?? 'Pendent' }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4">No hi ha partits per mostrar.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
+        @endforelse
+    </tbody>
+</table>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session; // AFEGIT
 
 class JugadoraController extends Controller
 {
@@ -17,11 +18,11 @@ class JugadoraController extends Controller
         ];
     }
 
-    public function index(Request $request)
+    public function index() // CANVIAT: Treure Request $request
     {
-        $jugadores = $request->session()->get('jugadores', $this->getSeedData());
-        if (!$request->session()->has('jugadores')) {
-            $request->session()->put('jugadores', $jugadores);
+        $jugadores = Session::get('jugadores', $this->getSeedData()); // CANVIAT: Usar Session
+        if (!Session::has('jugadores')) { // CANVIAT: Usar Session
+            Session::put('jugadores', $jugadores); // CANVIAT: Usar Session
         }
         return view('jugadores.index', compact('jugadores'));
     }
@@ -49,7 +50,7 @@ class JugadoraController extends Controller
                         ->withInput();
         }
 
-        $jugadores = $request->session()->get('jugadores', []);
+        $jugadores = Session::get('jugadores', []); // CANVIAT: Usar Session
 
         $newJugadora = [
             'id' => count($jugadores) + 1,
@@ -59,9 +60,24 @@ class JugadoraController extends Controller
         ];
 
         $jugadores[] = $newJugadora;
-        $request->session()->put('jugadores', $jugadores);
+        Session::put('jugadores', $jugadores); // CANVIAT: Usar Session
 
         return redirect()->route('jugadores.index')
                         ->with('success', 'Jugadora creada correctament.');
+    }
+
+    /**
+     * Mostra una jugadora específica.
+     */
+    public function show(int $id) // AFEGIT
+    {
+        $jugadores = Session::get('jugadores', $this->getSeedData());
+
+        // L'ID rebut és la *clau* de l'array, com a EquipController
+        abort_if(!isset($jugadores[$id]), 404, 'Jugadora no trobada');
+        
+        $jugadora = $jugadores[$id];
+        
+        return view('jugadores.show', compact('jugadora'));
     }
 }

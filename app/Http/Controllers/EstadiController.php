@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session; // AFEGIT
 
 class EstadiController extends Controller
 {
@@ -41,14 +42,14 @@ class EstadiController extends Controller
     /**
      * Mostra el llistat d'estadis.
      */
-    public function index(Request $request)
+    public function index() // CANVIAT: Treure Request $request
     {
         // Carrega les dades de la sessió o les dades inicials si no existeixen
-        $estadis = $request->session()->get('estadis', $this->getSeedData());
+        $estadis = Session::get('estadis', $this->getSeedData()); // CANVIAT: Usar Session
 
         // Assegura que les dades inicials es guarden a la sessió la primera vegada
-        if (!$request->session()->has('estadis')) {
-            $request->session()->put('estadis', $estadis);
+        if (!Session::has('estadis')) { // CANVIAT: Usar Session
+            Session::put('estadis', $estadis); // CANVIAT: Usar Session
         }
 
         return view('estadis.index', compact('estadis'));
@@ -83,7 +84,7 @@ class EstadiController extends Controller
         }
 
         // Aconsegueix les dades actuals de la sessió
-        $estadis = $request->session()->get('estadis', []);
+        $estadis = Session::get('estadis', []); // CANVIAT: Usar Session
 
         // Crea el nou estadi
         $newEstadi = [
@@ -99,10 +100,25 @@ class EstadiController extends Controller
         $estadis[] = $newEstadi;
 
         // Guarda el nou array a la sessió
-        $request->session()->put('estadis', $estadis);
+        Session::put('estadis', $estadis); // CANVIAT: Usar Session
 
         // Redirigeix al llistat amb un missatge d'èxit
         return redirect()->route('estadis.index')
                         ->with('success', 'Estadi creat correctament.');
+    }
+
+    /**
+     * Mostra un estadi específic.
+     */
+    public function show(int $id) // AFEGIT
+    {
+        $estadis = Session::get('estadis', $this->getSeedData());
+
+        // L'ID rebut és la *clau* de l'array, com a EquipController
+        abort_if(!isset($estadis[$id]), 404, 'Estadi no trobat');
+        
+        $estadi = $estadis[$id];
+        
+        return view('estadis.show', compact('estadi'));
     }
 }
