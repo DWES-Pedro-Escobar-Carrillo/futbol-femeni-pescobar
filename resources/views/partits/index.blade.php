@@ -21,7 +21,6 @@
     </thead>
     <tbody>
         @forelse ($partits as $key => $partit)
-            {{-- Utilitzem el component Blade per a la fila --}}
             <x-partit :partit="$partit" :key="$key" />
         @empty
             <tr>

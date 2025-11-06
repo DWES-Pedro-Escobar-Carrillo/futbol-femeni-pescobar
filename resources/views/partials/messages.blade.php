@@ -1,11 +1,9 @@
-{{-- Missatges d'èxit --}}
 @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
 @endif
 
-{{-- Missatges d'error de validació --}}
 @if ($errors->any())
     <div class="alert alert-danger">
         <strong>Hi ha hagut errors de validació:</strong>

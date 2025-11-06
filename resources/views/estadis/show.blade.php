@@ -2,7 +2,6 @@
 @section('title', "Detall de l'Estadi")
 
 @section('content')
-{{-- Emulant l'estil de x-equip --}}
 <div class="border rounded-lg shadow-md p-4 bg-white">
     <h1 class="text-3xl font-bold text-blue-800 mb-6">{{ $estadi['nom'] }}</h1>
     <p><strong>Ciutat:</strong> {{ $estadi['ciutat'] }}</p>
