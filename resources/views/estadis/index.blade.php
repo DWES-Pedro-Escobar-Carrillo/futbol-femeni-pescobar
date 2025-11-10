@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', "Guia d'Equips")
+@section('title', "Guia d'Estadis")
 
 @section('content')
 <h1 class="text-3xl font-bold text-blue-800 mb-6">Guia d'Estadis</h1>
