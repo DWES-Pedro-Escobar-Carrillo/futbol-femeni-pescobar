@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('equips', function (Blueprint $table) {
+        Schema::create('partits', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
+            $table->foreignId('local_id')->constrained('equips')->cascadeOnDelete();
+            $table->foreignId('visitant_id')->constrained('equips')->cascadeOnDelete();
             $table->foreignId('estadi_id')->nullable()->constrained()->nullOnDelete();
-            $table->integer('titols')->default(0);
+            $table->dateTime('data');
+            $table->integer('jornada');
+            $table->string('gols_local')->nullable();
+            $table->string('gols_visitant')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('equips');
+        Schema::dropIfExists('partits');
     }
 };

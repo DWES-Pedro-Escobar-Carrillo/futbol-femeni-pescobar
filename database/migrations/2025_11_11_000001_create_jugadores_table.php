@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('equips', function (Blueprint $table) {
+        Schema::create('jugadoras', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
-            $table->foreignId('estadi_id')->nullable()->constrained()->nullOnDelete();
-            $table->integer('titols')->default(0);
+            $table->foreignId('equip_id')->constrained()->cascadeOnDelete();
+            $table->string('nom');
+            $table->date('data_naixement');
+            $table->integer('dorsal');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('equips');
+        Schema::dropIfExists('jugadores');
     }
 };

@@ -15,21 +15,46 @@
         <tr>
             <th class="border border-gray-300 p-2">Nom</th>
             <th class="border border-gray-300 p-2">Equip</th>
-            <th class="border border-gray-300 p-2">Posició</th>
+            <th class="border border-gray-300 p-2">Dorsal</th>
+            <th class="border border-gray-300 p-2">Edat</th>
+            <th class="border border-gray-300 p-2">Accions</th>
         </tr>
     </thead>
     <tbody>
-        @forelse ($jugadores as $key => $jugadora)
+        @forelse ($jugadores as $jugadora)
             <tr class="hover:bg-gray-100">
                 <td class="border border-gray-300 p-2">
-                    <a href="{{ route('jugadores.show', $key) }}" class="text-blue-700 hover:underline">{{ $jugadora['nom'] }}</a>
+                    <a href="{{ route('jugadores.show', $jugadora) }}" class="text-blue-700 hover:underline">{{ $jugadora->nom }}</a>
                 </td>
-                <td class="border border-gray-300 p-2">{{ $jugadora['equip'] }}</td>
-                <td class="border border-gray-300 p-2">{{ $jugadora['posicio'] }}</td>
+                <td class="border border-gray-300 p-2">
+                    @if ($jugadora->equip)
+                        <a href="{{ route('equips.show', $jugadora->equip) }}" class="text-blue-700 hover:underline">
+                            {{ $jugadora->equip->nom }}
+                        </a>
+                    @else
+                        <span class="text-gray-500">Sense equip</span>
+                    @endif
+                </td>
+                <td class="border border-gray-300 p-2">{{ $jugadora->dorsal }}</td>
+                <td class="border border-gray-300 p-2">
+                    @if ($jugadora->data_naixement)
+                        {{ $jugadora->edat }}
+                    @else
+                        N/D
+                    @endif
+                </td>
+                <td class="border border-gray-300 p-2">
+                    <a href="{{ route('jugadores.edit', $jugadora) }}" class="text-yellow-600 hover:underline">Editar</a>
+                    <form action="{{ route('jugadores.destroy', $jugadora) }}" method="POST" class="inline-block" onsubmit="return confirm('Estàs segur?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 hover:underline ml-2">Eliminar</button>
+                    </form>
+                </td>
             </tr>
         @empty
             <tr>
-                <td colspan="3" class="border border-gray-300 p-2">No hi ha jugadores per mostrar.</td>
+                <td colspan="5" class="border border-gray-300 p-2">No hi ha jugadores per mostrar.</td>
             </tr>
         @endforelse
     </tbody>
