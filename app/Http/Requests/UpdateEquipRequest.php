@@ -21,17 +21,18 @@ class UpdateEquipRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        $equipId = $this->route('equip')->id;
+{
+    $equipId = $this->route('equip')->id;
 
-        return [
-            'nom'    => [
-                'required',
-                'min:3',
-                Rule::unique('equips')->ignore($equipId),
-            ],
-            'estadi_id' => 'required|integer|exists:estadis,id',
-            'titols' => 'required|integer|min:0'
-        ];
-    }
+    return [
+        'nom' => [
+            'required',
+            'min:3',
+            \Illuminate\Validation\Rule::unique('equips')->ignore($equipId),
+        ],
+        'estadi_id' => 'required|integer|exists:estadis,id',
+        'titols'    => 'required|integer|min:0',
+        'escut'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ];
+}
 }

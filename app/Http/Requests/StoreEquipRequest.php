@@ -20,11 +20,12 @@ class StoreEquipRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'nom'    => 'required|min:3|unique:equips,nom',
-            'estadi_id' => 'required|integer|exists:estadis,id',
-            'titols' => 'required|integer|min:0'
-        ];
-    }
+{
+    return [
+        'nom'       => 'required|min:3|unique:equips,nom',
+        'estadi_id' => 'required|integer|exists:estadis,id',
+        'titols'    => 'required|integer|min:0',
+        'escut'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Màx 2MB
+    ];
+}
 }

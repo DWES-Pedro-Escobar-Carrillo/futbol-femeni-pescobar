@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.equip')
 @section('title', "Detall d'Equip")
 
 @section('content')
-<x-equip :nom="$equip->nom" :estadi="$equip->estadi->nom ?? 'Sense estadi'" :titols="$equip->titols"/>
-
+<x-equip :nom="$equip->nom" :estadi="$equip->estadi->nom ?? 'Sense estadi'" :titols="$equip->titols" :escut="$equip->escut"/>
 <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
     <h3 class="text-lg font-semibold text-gray-700">Edat Mitjana de les Jugadores:</h3>
     <p class="text-xl text-blue-800 font-bold">{{ $equip->edatMitjana ? number_format($equip->edatMitjana, 1) . ' anys' : 'N/D' }}</p>

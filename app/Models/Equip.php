@@ -17,7 +17,7 @@ class Equip extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['nom', 'estadi_id', 'titols' ];
+    protected $fillable = ['nom', 'estadi_id', 'titols', 'escut'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
