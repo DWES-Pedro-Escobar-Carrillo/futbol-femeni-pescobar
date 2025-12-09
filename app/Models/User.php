@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Un manager té un equip
+    public function equip()
+    {
+        return $this->belongsTo(Equip::class, 'team_id');
+    }
+
+
 }

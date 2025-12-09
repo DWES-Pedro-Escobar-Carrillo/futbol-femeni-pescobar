@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Equip;
 use App\Models\Estadi;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -39,5 +41,20 @@ class EquipsSeeder extends Seeder
         }
         
         Equip::factory()->count(15)->create();
+    
+
+
+$equips = Equip::all();
+
+foreach($equips as $equip) {
+    User::create([
+        'name' => 'Manager ' . $equip->nom,
+        'email' => 'manager.' . str_replace(' ', '', strtolower($equip->nom)) . '@futboldwes.com',
+        'password' => Hash::make('password'),
+        'role' => 'manager',
+        'team_id' => $equip->id,
+    ]);
+}
+    
     }
 }
