@@ -3,27 +3,21 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Estadi;
 
 class StoreEstadiRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true;
+        // Només si l'usuari té permís per crear estadis (definit a EstadiPolicy)
+        return $this->user()->can('create', Estadi::class);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'nom' => 'required|string|min:3|unique:estadis,nom',
-            'capacitat' => 'required|integer|min:1',
+            'capacitat' => 'required|integer|min:1', // Numèric positiu
         ];
     }
 }

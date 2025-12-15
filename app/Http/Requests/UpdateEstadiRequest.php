@@ -7,19 +7,12 @@ use Illuminate\Validation\Rule;
 
 class UpdateEstadiRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true;
+        // Fem servir la policy sobre l'estadi que s'està editant
+        return $this->user()->can('update', $this->route('estadi'));
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $estadiId = $this->route('estadi')->id;
