@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Estadi;
+use App\Models\User;
+
+class EstadiPolicy
+{
+    public function viewAny(): bool { return true; }
+    public function view(): bool { return true; }
+
+    public function create(User $user): bool { return $user->role === 'admin'; }
+    public function update(User $user, Estadi $estadi): bool { return $user->role === 'admin'; }
+    public function delete(User $user, Estadi $estadi): bool { return $user->role === 'admin'; }
+}

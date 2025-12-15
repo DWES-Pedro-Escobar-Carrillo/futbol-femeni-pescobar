@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Equip;
 use App\Models\Partit;
+use App\Models\User; // <--- Importar User
 use Carbon\Carbon;
 
 class PartitsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $equips = Equip::all();
         $iniciTemporada = Carbon::now()->subMonths(3);
         $jornada = 1;
+
+        // 1. OBTENER IDs DE LOS ÁRBITROS
+        $arbitresIds = User::where('role', 'arbitre')->pluck('id');
 
         if ($equips->count() < 2) {
             return;
@@ -37,6 +37,8 @@ class PartitsSeeder extends Seeder
                         'data' => $dataPartit,
                         'gols_local' => $dataPartit->isPast() ? rand(0, 4) : null,
                         'gols_visitant' => $dataPartit->isPast() ? rand(0, 4) : null,
+                        // 2. ASIGNAR ÁRBITRO ALEATORIO SI EXISTEN
+                        'arbitre_id' => $arbitresIds->isNotEmpty() ? $arbitresIds->random() : null,
                     ]);
                 }
             }
@@ -57,6 +59,8 @@ class PartitsSeeder extends Seeder
                         'data' => $dataPartit,
                         'gols_local' => $dataPartit->isPast() ? rand(0, 4) : null,
                         'gols_visitant' => $dataPartit->isPast() ? rand(0, 4) : null,
+                        // 2. ASIGNAR ÁRBITRO ALEATORIO TAMBIÉN AQUÍ
+                        'arbitre_id' => $arbitresIds->isNotEmpty() ? $arbitresIds->random() : null,
                     ]);
                 }
             }

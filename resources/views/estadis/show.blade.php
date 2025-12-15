@@ -1,33 +1,35 @@
-@extends('layouts.equip')
-@section('title', "Detall d'Estadi")
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ $estadi->nom }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<x-estadi :nom="$estadi->nom"   :capacitat="$estadi->capacitat" :equips="$estadi->equips"/>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <h3 class="text-2xl font-bold mb-4">Informació</h3>
+                <p><strong>Nom:</strong> {{ $estadi->nom }}</p>
+                <p><strong>Capacitat:</strong> {{ $estadi->capacitat }} espectadors</p>
 
-<div class="mt-6">
-    <h3 class="text-xl font-semibold text-gray-800 mb-3">Equips que juguen en aquest estadi:</h3>
-    @if($estadi->equips->isEmpty())
-        <p class="text-gray-600">Encara no hi ha equips assignats a aquest estadi.</p>
-    @else
-        <ul class="list-disc list-inside bg-gray-50 p-4 rounded-md shadow-sm">
-            @foreach($estadi->equips as $equip)
-                <li class="text-gray-700">
-                    <a href="{{ route('equips.show', $equip) }}" class="text-blue-600 hover:underline">
-                        {{ $equip->nom }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    @endif
-</div>
+                <div class="mt-6 flex space-x-3">
+                    @can('update', $estadi)
+                        <a href="{{ route('estadis.edit', $estadi) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                            Editar Estadi
+                        </a>
+                    @endcan
 
-<div class="mt-6">
-    <a href="{{ route('estadis.index') }}" class="bg-gray-300 text-black px-4 py-2 rounded">Tornar al llistat</a>
-    <a href="{{ route('estadis.edit', $estadi) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">Editar</a>
-    <form action="{{ route('estadis.destroy', $estadi) }}" method="POST" class="inline-block" onsubmit="return confirm('Estàs segur que vols eliminar aquest estadi?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Eliminar</button>
-    </form>
-</div>
-@endsection
+                    @can('delete', $estadi)
+                        <form action="{{ route('estadis.destroy', $estadi) }}" method="POST" onsubmit="return confirm('Eliminar estadi?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Eliminar Estadi
+                            </button>
+                        </form>
+                    @endcan
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
