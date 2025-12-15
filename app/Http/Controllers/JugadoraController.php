@@ -86,9 +86,11 @@ class JugadoraController extends Controller
     }
 
     public function destroy(Jugadora $jugadora)
-    {
-        $this->authorize('delete', $jugadora);
-        $this->servei->eliminar($jugadora);
-        return redirect()->route('jugadores.index')->with('success', 'Jugadora eliminada.');
-    }
+{
+    $this->authorize('delete', $jugadora);
+    
+    $this->servei->eliminar($jugadora->id); 
+    
+    return redirect()->route('jugadores.index')->with('success', 'Jugadora eliminada.');
+}
 }
