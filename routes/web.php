@@ -15,32 +15,27 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// --- RUTAS PROTEGIDAS (Crear, Editar, Borrar) ---
-// Es IMPORTANTE definirlas ANTES de las rutas públicas para evitar conflictos de URL
+// --- TOTES LES RUTES PROTEGIDES (Auth Requerit) ---
+// Ara tot està dins del grup 'auth'. Si no estàs loguejat, Laravel et redirigeix al login.
 Route::middleware('auth')->group(function () {
+    
+    // Perfil d'usuari
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rutas de gestión completas (excepto las que haremos públicas abajo)
-    Route::resource('equips', EquipController::class)->except(['index', 'show']);
-    
-    // El middleware 'role:admin' protege todo el recurso de estadios
+    // 1. ESTADIS: 
+    //    - Crear/Editar/Esborrar -> Només Admin (middleware role:admin)
+    //    - Veure (index/show)    -> Qualsevol usuari loguejat
     Route::middleware('role:admin')->resource('estadis', EstadiController::class)->except(['index', 'show']);
-    
-    Route::resource('partits', PartitController::class)->except(['index', 'show']);
-    Route::resource('jugadores', JugadoraController::class)
-        ->except(['index', 'show'])
-        ->parameter('jugadores', 'jugadora');
+    Route::resource('estadis', EstadiController::class)->only(['index', 'show']);
+
+    // 2. ALTRES RECURSOS (Equips, Partits, Jugadores):
+    //    - Totes les accions requereixen estar loguejat.
+    //    - La restricció específica (qui pot editar què) la gestionen les Policies als Controladors.
+    Route::resource('equips', EquipController::class);
+    Route::resource('partits', PartitController::class);
+    Route::resource('jugadores', JugadoraController::class)->parameter('jugadores', 'jugadora');
 });
 
 require __DIR__.'/auth.php';
-
-// --- RUTAS PÚBLICAS (Ver lista y detalle) ---
-// Se definen al final para que '/equips/create' tenga prioridad sobre '/equips/{id}'
-Route::resource('equips', EquipController::class)->only(['index', 'show']);
-Route::resource('estadis', EstadiController::class)->only(['index', 'show']);
-Route::resource('partits', PartitController::class)->only(['index', 'show']);
-Route::resource('jugadores', JugadoraController::class)
-    ->only(['index', 'show'])
-    ->parameter('jugadores', 'jugadora');
