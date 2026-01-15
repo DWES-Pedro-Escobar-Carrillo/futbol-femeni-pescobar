@@ -17,7 +17,8 @@ class Partit extends Model
         'data', 
         'jornada', 
         'gols_local', 
-        'gols_visitant'
+        'gols_visitant',
+        'arbitre_id' // He añadido esto también por si necesitas asignar árbitros masivamente
     ];
 
     protected $casts = [
@@ -38,6 +39,14 @@ class Partit extends Model
     {
         return $this->belongsTo(Estadi::class);
     }
+
+    // --- AÑADE ESTA FUNCIÓN ---
+    public function arbitre()
+    {
+        // Asumiendo que el árbitro es un User y la clave foránea es 'arbitre_id'
+        return $this->belongsTo(User::class, 'arbitre_id');
+    }
+    // --------------------------
 
     public function getResultatAttribute(): string
     {

@@ -15,6 +15,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/historic', [PartitController::class, 'historic'])->name('partits.historic');
+
 // --- TOTES LES RUTES PROTEGIDES (Auth Requerit) ---
 // Ara tot està dins del grup 'auth'. Si no estàs loguejat, Laravel et redirigeix al login.
 Route::middleware('auth')->group(function () {

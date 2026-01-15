@@ -12,6 +12,10 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('partits.historic')" :active="request()->routeIs('partits.historic')">
+                        {{ __('Històric Partits') }}
+                    </x-nav-link>
                     
                     @include('partials.menu', ['responsive' => false])
                 </div>
@@ -71,6 +75,10 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('partits.historic')" :active="request()->routeIs('partits.historic')">
+                {{ __('Històric Partits') }}
             </x-responsive-nav-link>
             
             @include('partials.menu', ['responsive' => true])
