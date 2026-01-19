@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Equip;
+use App\Http\Resources\EquipResource;
+use App\Http\Requests\StoreEquipRequest;
+use App\Http\Requests\UpdateEquipRequest;
+
+class EquipController extends Controller
+{
+    public function index()
+    {
+        return EquipResource::collection(Equip::paginate(10));
+    }
+
+    public function store(StoreEquipRequest $request)
+    {
+        // Reutilitzem el Request existent. Assegura't que l'usuari tingui permisos al Policy
+        // $this->authorize('create', Equip::class); 
+        
+        $equip = Equip::create($request->validated());
+        return response()->json(new EquipResource($equip), 201);
+    }
+
+    public function show(Equip $equip)
+    {
+        return new EquipResource($equip);
+    }
+
+    public function update(UpdateEquipRequest $request, Equip $equip)
+    {
+        // $this->authorize('update', $equip);
+        $equip->update($request->validated());
+        return response()->json(new EquipResource($equip), 200);
+    }
+
+    public function destroy(Equip $equip)
+    {
+        // $this->authorize('delete', $equip);
+        $equip->delete();
+        return response()->noContent();
+    }
+}
