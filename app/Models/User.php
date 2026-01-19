@@ -10,8 +10,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    // Afegeix HasApiTokens aquí
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [

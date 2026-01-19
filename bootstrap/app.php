@@ -16,25 +16,36 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Laravel 12: força JSON a les rutes api/*
+        // Forçar JSON només si la petició és explícitament a l'API
         $exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*'));
 
         $exceptions->render(function (\Illuminate\Validation\ValidationException $e, Request $request) {
-            return response()->json([
-                'message' => 'Dades no vàlides.',
-                'errors' => $e->errors(),
-            ], 422);
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Dades no vàlides.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
         });
 
+        // AQUI ESTAVA EL PROBLEMA:
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
-            return response()->json(['message' => 'No autenticat.'], 401);
+            // Afegim el condicional: Només tornar JSON si estem a l'API
+            if ($request->is('api/*')) {
+                return response()->json(['message' => 'No autenticat.'], 401);
+            }
+            // Si no és API, no retornem res aquí i Laravel farà la redirecció automàtica al Login
         });
 
         $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, Request $request) {
-            return response()->json(['message' => 'Recurs o ruta no trobada.'], 404);
+            if ($request->is('api/*')) {
+                return response()->json(['message' => 'Recurs o ruta no trobada.'], 404);
+            }
         });
 
         $exceptions->render(function (\Throwable $e, Request $request) {
-            return response()->json(['message' => 'Error del servidor.'], 500);
+            if ($request->is('api/*')) {
+                return response()->json(['message' => 'Error del servidor.'], 500);
+            }
         });
-        })->create();
+    })->create();
