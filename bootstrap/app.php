@@ -13,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Habilitar el soporte de cookies/sesión para la API (Sanctum Stateful)
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Forçar JSON només si la petició és explícitament a l'API
@@ -28,13 +31,11 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // AQUI ESTAVA EL PROBLEMA:
+        // Gestió de l'error d'autenticació per a l'API
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
-            // Afegim el condicional: Només tornar JSON si estem a l'API
             if ($request->is('api/*')) {
                 return response()->json(['message' => 'No autenticat.'], 401);
             }
-            // Si no és API, no retornem res aquí i Laravel farà la redirecció automàtica al Login
         });
 
         $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, Request $request) {
