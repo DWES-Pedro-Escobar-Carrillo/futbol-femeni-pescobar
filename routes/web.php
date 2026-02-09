@@ -6,6 +6,7 @@ use App\Http\Controllers\EstadiController;
 use App\Http\Controllers\JugadoraController;
 use App\Http\Controllers\PartitController;
 use App\Http\Controllers\EquipController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('equips', EquipController::class);
     Route::resource('partits', PartitController::class);
     Route::resource('jugadores', JugadoraController::class)->parameter('jugadores', 'jugadora');
+
+    Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+
 });
 
 require __DIR__.'/auth.php';
