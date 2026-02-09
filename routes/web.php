@@ -18,6 +18,10 @@ Route::get('/dashboard', function () {
 
 Route::get('/historic', [PartitController::class, 'historic'])->name('partits.historic');
 
+Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+
+
 Route::middleware('auth')->group(function () {
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,8 +37,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('partits', PartitController::class);
     Route::resource('jugadores', JugadoraController::class)->parameter('jugadores', 'jugadora');
 
-    Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle'])->name('google.redirect');
-    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
 
 });
 
