@@ -17,8 +17,6 @@ class EquipController extends Controller
 
     public function store(StoreEquipRequest $request)
     {
-        // Reutilitzem el Request existent. Assegura't que l'usuari tingui permisos al Policy
-        // $this->authorize('create', Equip::class); 
         
         $equip = Equip::create($request->validated());
         return response()->json(new EquipResource($equip), 201);

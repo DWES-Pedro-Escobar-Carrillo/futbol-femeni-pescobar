@@ -13,7 +13,6 @@ class EquipResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->nom,
             'estadi_id' => $this->estadi_id,
-            // Afegeix altres camps necessaris
         ];
     }
 }
