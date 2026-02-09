@@ -5,9 +5,23 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Equip;
 use App\Models\Partit;
+use Livewire\Attributes\On;
 
 class Classificacio extends Component
 {
+
+    #[On('echo:classificacio,partit.resultat')]
+    #[On('classificacio-refresh')]
+    public function refreshFromBroadcast(): void
+    {
+        // Opció 1: si fas la consulta en render(), n'hi ha prou amb refrescar.
+        $this->dispatch('$refresh');
+
+        // Opció 2: si tens un mètode específic, crida'l ací.
+        // $this->calcularClassificacio();
+    }
+
+
     public function render()
     {
         // 1. Obtenim tots els equips

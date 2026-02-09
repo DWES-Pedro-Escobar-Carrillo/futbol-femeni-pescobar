@@ -11,6 +11,8 @@ use App\Http\Requests\StorePartitRequest;
 use App\Http\Requests\UpdatePartitRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use App\Events\PartitActualitzat;
+use Illuminate\Http\Request;
 
 class PartitController extends Controller
 {
@@ -70,6 +72,8 @@ class PartitController extends Controller
             // Si es Admin, recogemos todo
             $data = $request->validated();
         }
+
+        PartitActualitzat::dispatch($partit->id);
 
         // Pasamos ID al servicio
         $this->servei->actualitzar($partit->id, $data);

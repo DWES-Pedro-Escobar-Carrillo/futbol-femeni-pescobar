@@ -8,6 +8,9 @@ use App\Http\Controllers\PartitController;
 use App\Http\Controllers\EquipController;
 use App\Http\Controllers\AuthController;
 
+Route::patch('/partits/{partit}', [PartitController::class, 'update'])
+    ->name('partits.update');
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
