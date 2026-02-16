@@ -1,42 +1,64 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    // Redirigeix a Google
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    /*public function redirectToGoogle()
-{
-    return Socialite::driver('google')
-        ->with(['prompt' => 'select_account']) // Esto fuerza la selección de cuenta
-        ->redirect();
-}*/
-
+    // Gestiona la resposta de Google
     public function handleGoogleCallback()
-{
-    $googleUser = Socialite::driver('google')->stateless()->user();
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Error autenticant amb Google.');
+        }
 
-    // Busca por email, y SIEMPRE actualiza o crea los campos del segundo array
-    $user = User::updateOrCreate(
-        ['email' => $googleUser->getEmail()], // Búsqueda
-        [
-            'name' => $googleUser->getName(),
-            'google_id' => $googleUser->getId(),
-            'avatar' => $googleUser->getAvatar(),
-            // El password solo se asigna si es un usuario nuevo
-            'password' => bcrypt(str()->random(24)), 
-        ]
-    );
+        // Busquem si l'usuari ja existeix pel correu
+        $user = User::where('email', $googleUser->email)->first();
 
-    Auth::login($user);
+        if ($user) {
+            // RESTRICCIÓ: Si l'usuari existeix però NO és 'convidat' (és admin o manager),
+            // no li permetem entrar amb Google per seguretat/política.
+            if ($user->role !== 'convidat') {
+                return redirect()->route('login')
+                    ->withErrors(['email' => 'Els usuaris Administradors i Mànagers han d\'entrar amb contrasenya, no amb Google.']);
+            }
 
-    return redirect('/dashboard');
-}
+            // Si és convidat, actualitzem avatar i Google ID si cal
+            $user->update([
+                'google_id' => $googleUser->id,
+                'avatar' => $googleUser->avatar,
+            ]);
+        } else {
+            // Si no existeix, el creem com a CONVIDAT
+            // Generem un password aleatori perquè la BD no es queixi, 
+            // però l'usuari no el sabrà (només pot entrar amb Google).
+            $user = User::create([
+                'name' => $googleUser->name,
+                'email' => $googleUser->email,
+                'google_id' => $googleUser->id,
+                'avatar' => $googleUser->avatar,
+                'role' => 'convidat', // Rol per defecte per a usuaris de Google
+                'password' => Hash::make(Str::random(32)), // Password segur i desconegut
+            ]);
+        }
+
+        // Fem login de l'usuari
+        Auth::login($user);
+
+        return redirect()->intended('dashboard');
+    }
 }

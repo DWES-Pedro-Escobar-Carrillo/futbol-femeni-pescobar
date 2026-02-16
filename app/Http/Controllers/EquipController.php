@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equip;
-use App\Models\Estadi; // <--- IMPORTANTE: Añadir esta línea
+use App\Models\Estadi;
 use App\Services\EquipService;
 use App\Http\Requests\StoreEquipRequest;
 use App\Http\Requests\UpdateEquipRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+// Imports per a la IA
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class EquipController extends Controller
 {
@@ -25,18 +29,55 @@ class EquipController extends Controller
 
     public function show(Equip $equip)
     {
-        return view('equips.show', compact('equip'));
+        // --- INTEGRACIÓ DEFINITIVA AMB GEMINI 2.5 ---
+        
+        // Guardem la resposta en cache durant 24h per estalviar crides (i diners/quota)
+        // Per forçar una nova descripció: php artisan cache:clear
+        $descripcio_ia = Cache::remember('descripcio_equip_' . $equip->id, 86400, function () use ($equip) {
+            
+            $apiKey = env('GEMINI_API_KEY');
+            
+            if (!$apiKey) {
+                return "Falta configurar GEMINI_API_KEY al fitxer .env";
+            }
+
+            // Prompt millorat per a la IA
+            $prompt = "Escriu una descripció breu (màxim 60 paraules), èpica i professional per a l'equip de futbol femení '{$equip->nom}'. 
+                       Juga a l'estadi '{$equip->estadi->nom}'. Destaca el seu estil de joc ofensiu i la passió de l'afició.";
+
+            // --- MODEL ACTUALITZAT A GEMINI 2.5 FLASH ---
+            // Utilitzem el model que hem vist a la teva llista: 'gemini-2.5-flash'
+            $model = 'gemini-2.5-flash';
+            
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
+                'contents' => [
+                    ['parts' => [['text' => $prompt]]]
+                ]
+            ]);
+
+            // Si la resposta és correcta (Codi 200)
+            if ($response->successful()) {
+                // Extreiem el text de la resposta JSON
+                return $response->json()['candidates'][0]['content']['parts'][0]['text'] ?? 'La IA no ha retornat cap text.';
+            }
+
+            // --- GESTIÓ D'ERRORS ---
+            // Si falla, guardem l'error al log per no embrutar la pantalla de l'usuari final
+            Log::error('Gemini API Error: ' . $response->body());
+            
+            // Retornem un missatge d'error visible (pots canviar-ho per un text buit si prefereixes)
+            return 'No s\'ha pogut generar la descripció en aquest moment.';
+        });
+
+        return view('equips.show', compact('equip', 'descripcio_ia'));
     }
 
-    // --- CORRECCIÓN EN CREATE ---
     public function create()
     {
         $this->authorize('create', Equip::class);
-        
-        // Obtenemos los estadios para el select
         $estadis = Estadi::all(); 
-        
-        // Pasamos 'estadis' a la vista
         return view('equips.create', compact('estadis')); 
     }
 
@@ -60,15 +101,10 @@ class EquipController extends Controller
         return redirect()->route('equips.index')->with('success', 'Equip creat correctament.');
     }
 
-    // --- CORRECCIÓN EN EDIT ---
     public function edit(Equip $equip)
     {
         $this->authorize('update', $equip);
-
-        // Obtenemos los estadios para el select
         $estadis = Estadi::all();
-
-        // Pasamos 'equip' Y 'estadis' a la vista
         return view('equips.edit', compact('equip', 'estadis'));
     }
 

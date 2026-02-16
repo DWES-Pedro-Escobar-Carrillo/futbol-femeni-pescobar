@@ -21,8 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'google_id',
-        'avatar',
+        'role',        // <--- AFEGIT
+        'google_id',   // <--- JA HI ERA, PERÒ ASSEGURA'T
+        'avatar',      // <--- JA HI ERA
+        'team_id'
     ];
 
     /**
@@ -53,6 +55,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Equip::class, 'team_id');
     }
-
-
 }

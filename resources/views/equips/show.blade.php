@@ -12,13 +12,24 @@
                 {{-- Detalles del equipo --}}
                 <div class="flex items-center mb-6">
                     @if($equip->escut)
-                        <img src="{{ asset('storage/' . $equip->escut) }}" alt="Escut" class="w-24 h-24 mr-4">
+                        <img src="{{ asset('storage/' . $equip->escut) }}" alt="Escut" class="w-24 h-24 mr-4 object-contain">
                     @endif
                     <div>
                         <h3 class="text-2xl font-bold">{{ $equip->nom }}</h3>
                         <p class="text-gray-600">Estadi: {{ $equip->estadi->nom ?? 'Sense estadi' }}</p>
                         <p class="text-gray-600">Títols: {{ $equip->titols }}</p>
                     </div>
+                </div>
+
+                {{-- SECCIÓ IA: Descripció Generada --}}
+                <div class="mb-6 p-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-r">
+                    <h4 class="text-lg font-bold text-indigo-700 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Descripció IA (Gemini)
+                    </h4>
+                    <p class="text-gray-700 mt-2 italic">
+                        "{{ $descripcio_ia ?? 'Carregant informació...' }}"
+                    </p>
                 </div>
 
                 {{-- Botones de Acción (Editar/Borrar) --}}
@@ -45,7 +56,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-xl font-bold">Plantilla</h4>
                         
-                        {{-- Botón añadir jugadora: Si tiene permiso general de crear y (si es manager) es SU equipo --}}
+                        {{-- Botón añadir jugadora --}}
                         @can('create', App\Models\Jugadora::class)
                             @if(Auth::user()->role === 'admin' || Auth::user()->team_id === $equip->id)
                                 <a href="{{ route('jugadores.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded">
